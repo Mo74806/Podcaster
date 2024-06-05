@@ -1,8 +1,12 @@
+"use client";
 import PodcastCard from '@/components/PocastCard'
 import { podcastData } from '@/constants'
 import React from 'react'
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const Home = () => {
+
   return (
     <div><h1 className='text-20 font-bold text-white-1'> Trending Podcast</h1>
     <div className="podcast_grid">
