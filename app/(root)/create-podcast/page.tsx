@@ -1,9 +1,13 @@
-import React from 'react'
+import CreatePodcastForm from '@/components/CreatePodcastForm';
+import React from 'react';
 
 const CreatePodcast = () => {
   return (
-    <div><h1 className='text-20 font-bold text-white-1'> Create Podcast</h1></div>
-  )
-}
+    <section className="mt-10 pb-10 flex flex-col">
+      <h1 className="text-20 font-bold text-white-1 ">Create Podcast</h1>
+      <CreatePodcastForm />
+    </section>
+  );
+};
 
-export default CreatePodcast
+export default CreatePodcast;

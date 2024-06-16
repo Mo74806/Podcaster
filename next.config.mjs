@@ -1,24 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: true,
   },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'lovely-flamingo-139.convex.cloud'
+        hostname: 'lovely-flamingo-139.convex.cloud',
       },
       {
         protocol: 'https',
-        hostname: 'sleek-capybara-771.convex.cloud'
+        hostname: 'groovy-boar-587.convex.cloud',
       },
       {
         protocol: 'https',
-        hostname: 'img.clerk.com'
+        hostname: 'sleek-capybara-771.convex.cloud',
       },
-    ]
-  }
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
