@@ -166,3 +166,40 @@ export const followuser = mutation({
     }
   },
 });
+
+export const getFollowing = query({
+  args: { clerkId: v.string() },
+  async handler(ctx, args) {
+    // Fetch the user by clerkId
+    const user = await ctx.db
+      .query('users')
+      .filter((q) => q.eq(q.field('clerkId'), args.clerkId))
+      .unique();
+
+    // If user not found, throw an error
+    if (!user) {
+      throw new ConvexError('User not found');
+    }
+
+    // If the user has no following list, return an empty array
+    if (!user.following || user.following.length === 0) {
+      return [];
+    }
+    const followingIds = user.following;
+
+    // Fetch the users that the current user is following
+    const followingUsers = [];
+    for (const id of user.following) {
+      const followingUser = await ctx.db
+        .query('users')
+        .filter((q) => q.eq(q.field('_id'), id))
+        .unique();
+
+      if (followingUser) {
+        followingUsers.push(followingUser);
+      }
+    }
+    // Return the following users
+    return followingUsers;
+  },
+});

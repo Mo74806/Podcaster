@@ -32,7 +32,13 @@ const RightSidebar = () => {
       <section>
         <Header headerTitle="Fans Also Like" />
 
-        {topPodcasters && topPodcasters.length > 0 ? <Carousel fansLikeDetails={topPodcasters} /> : <LoaderSpinner />}
+        {topPodcasters && topPodcasters.length > 0 ? (
+          <Carousel fansLikeDetails={topPodcasters!} />
+        ) : (
+          <div className="pt-8">
+            <LoaderSpinner />
+          </div>
+        )}
       </section>
       <section className="flex flex-col gap-8 pt-12">
         <Header headerTitle="Top Podcastrs" />

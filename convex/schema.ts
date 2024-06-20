@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from 'convex/server';
-import { v } from 'convex/values';
+import { ConvexError, v } from 'convex/values';
+import { query } from './_generated/server';
 
 export default defineSchema({
   podcasts: defineTable({
