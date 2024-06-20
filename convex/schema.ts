@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineSchema, defineTable } from 'convex/server';
+import { v } from 'convex/values';
 
 export default defineSchema({
   podcasts: defineTable({
@@ -11,6 +11,7 @@ export default defineSchema({
     imageUrl: v.optional(v.string()),
     imageStorageId: v.optional(v.id('_storage')),
     author: v.string(),
+    podcastCategory: v.string(),
     authorId: v.string(),
     authorImageUrl: v.string(),
     voicePrompt: v.string(),
@@ -27,5 +28,9 @@ export default defineSchema({
     imageUrl: v.string(),
     clerkId: v.string(),
     name: v.string(),
-  })
-})
+    firstName: v.string(),
+    lastName: v.string(),
+    following: v.optional(v.array(v.id('users'))),
+    follower: v.optional(v.array(v.id('users'))),
+  }),
+});

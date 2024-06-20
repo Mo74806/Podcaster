@@ -21,6 +21,14 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "openAi.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "openAi.js",
+    "components/GeneratePodcast.jsx",
+    "components/GeneratePodcast.jsx"
+  ],
   "exclude": ["node_modules"]
 }

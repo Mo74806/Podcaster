@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
@@ -17,10 +16,14 @@ import { Button } from './ui/button';
 import { Loader } from 'lucide-react';
 import type { Id } from '@/convex/_generated/dataModel';
 import type { VoiceType } from '@/types';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useToast } from './ui/use-toast';
 
 const CreatePodcastForm = () => {
   const router = useRouter();
   const [voiceType, setVoiceType] = useState<string | null>(null);
+  const { toast } = useToast();
   // const voiceCategories = ['alloy', 'shimmer', 'nova', 'echo', 'fable', 'onyx'];
   const voiceCategories = ['Male', 'Female'];
   const [voicePrompt, setVoicePrompt] = useState('');
@@ -37,6 +40,7 @@ const CreatePodcastForm = () => {
   const formSchema = z.object({
     podcastTitle: z.string().min(2),
     podcastDescription: z.string().min(2),
+    podcastCategory: z.string().min(2),
   });
 
   // 1. Define your form.
@@ -45,18 +49,52 @@ const CreatePodcastForm = () => {
     defaultValues: {
       podcastTitle: '',
       podcastDescription: '',
+      podcastCategory: '',
     },
   });
 
+  const createPodcast = useMutation(api.podcasts.createPodcast);
+
   // 2. Define a submit handler.
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    //console.log(data)
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
+      setIsSubmitting(true);
+      if (!audioUrl || !imageUrl || !voiceType) {
+        toast({
+          title: 'Please generate audio and image',
+        });
+        console.log('error');
+
+        setIsSubmitting(false);
+        throw new Error('Please generate audio and image');
+      }
+
+      const podcast = await createPodcast({
+        podcastTitle: data.podcastTitle,
+        podcastDescription: data.podcastDescription,
+        podcastCategory: data.podcastCategory,
+        audioUrl,
+        imageUrl,
+        voiceType,
+        imagePrompt,
+        voicePrompt,
+        views: 0,
+        audioDuration,
+        audioStorageId: audioStorageId!,
+        imageStorageId: imageStorageId!,
+      });
+      toast({ title: 'Podcast created' });
+      setIsSubmitting(false);
+      router.push('/');
     } catch (error) {
-      //console.log(error);
-    } finally {
+      console.log(error);
+      toast({
+        title: 'Error',
+        variant: 'destructive',
+      });
+      setIsSubmitting(false);
     }
-  };
+  }
 
   return (
     <Form {...form}>
@@ -68,6 +106,19 @@ const CreatePodcastForm = () => {
             render={({ field }) => (
               <FormItem className="flex flex-col gap-2.5">
                 <FormLabel className="text-16 font-bold text-white-1">Title</FormLabel>
+                <FormControl>
+                  <Input className="input-class focus-visible:ring-offset-orange-1" placeholder="Podcast Title Here" {...field} />
+                </FormControl>
+                <FormMessage className="text-error" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="podcastCategory"
+            render={({ field }) => (
+              <FormItem className="flex flex-col gap-2.5">
+                <FormLabel className="text-16 font-bold text-white-1">Category</FormLabel>
                 <FormControl>
                   <Input className="input-class focus-visible:ring-offset-orange-1" placeholder="Podcast Title Here" {...field} />
                 </FormControl>
@@ -91,7 +142,7 @@ const CreatePodcastForm = () => {
                 ))}
               </SelectContent>
               {!voiceType && <p className="text-error">Please Select Voice Type</p>}
-             </Select>
+            </Select>
           </div>
 
           <FormField
@@ -131,6 +182,9 @@ const CreatePodcastForm = () => {
           <div className="mt-10 w-full">
             <Button
               type="submit"
+              // onClick={() => {
+              //   onSubmit(form);
+              // }}
               className="text-16 w-full bg bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 hover:bg-black-1"
             >
               {isSubmitting ? (

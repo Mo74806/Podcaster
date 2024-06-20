@@ -7,7 +7,7 @@ import { GenerateThumbnailProps } from '@/types';
 import { Loader } from 'lucide-react';
 import { Input } from './ui/input';
 import Image from 'next/image';
-// import { useToast } from './ui/use-toast';
+import { useToast } from './ui/use-toast';
 import { useAction, useMutation } from 'convex/react';
 import { useUploadFiles } from '@xixixao/uploadstuff/react';
 import { api } from '@/convex/_generated/api';
@@ -17,7 +17,7 @@ const GenerateThumbnail = ({ setImage, setImageStorageId, image, imagePrompt, se
   const [isAiThumbnail, setIsAiThumbnail] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
-  // const { toast } = useToast();
+  const { toast } = useToast();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const { startUpload } = useUploadFiles(generateUploadUrl);
   const getImageUrl = useMutation(api.podcasts.getUrl);
@@ -38,12 +38,12 @@ const GenerateThumbnail = ({ setImage, setImageStorageId, image, imagePrompt, se
       const imageUrl = await getImageUrl({ storageId });
       setImage(imageUrl!);
       setIsImageLoading(false);
-      // toast({
-      //   title: 'Thumbnail generated successfully',
-      // });
+      toast({
+        title: 'Thumbnail generated successfully',
+      });
     } catch (error) {
       console.log(error);
-      // toast({ title: 'Error generating thumbnail', variant: 'destructive' });
+      toast({ title: 'Error generating thumbnail', variant: 'destructive' });
     }
   };
 
@@ -67,13 +67,13 @@ const GenerateThumbnail = ({ setImage, setImageStorageId, image, imagePrompt, se
       const blob = await file.arrayBuffer().then((ab) => new Blob([ab]));
       const imageUrl = URL.createObjectURL(blob); // Create URL for audio playback or further use
 
-      setImage(imageUrl);
-      setIsImageLoading(false);
-      // handleImage(blob, file.name);
+      // setImage(imageUrl);
+      // setIsImageLoading(false);
+      handleImage(blob, file.name);
     } catch (error) {
       console.log(error);
       setIsImageLoading(false);
-      // toast({ title: 'Error uploading image', variant: 'destructive' });
+      toast({ title: 'Error uploading image', variant: 'destructive' });
     }
   };
 

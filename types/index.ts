@@ -12,7 +12,7 @@ export interface EmptyStateProps {
 }
 
 export interface TopPodcastersProps {
-  _id: Id<'users'>;
+  _id: Id<'users'> | any;
   _creationTime: number;
   email: string;
   imageUrl: string;
@@ -20,7 +20,8 @@ export interface TopPodcastersProps {
   name: string;
   podcast: {
     podcastTitle: string;
-    pocastId: Id<'podcasts'>;
+    podcastId: Id<'podcasts'> | any;
+    podcastImage: string;
   }[];
   totalPodcasts: number;
 }
@@ -87,9 +88,9 @@ export interface PodcastDetailPlayerProps {
   author: string;
   isOwner: boolean;
   imageUrl: string;
-  podcastId: Id<'podcasts'>;
-  imageStorageId: Id<'_storage'>;
-  audioStorageId: Id<'_storage'>;
+  podcastId: Id<'podcasts'> | string;
+  imageStorageId: Id<'_storage'> | string;
+  audioStorageId: Id<'_storage'> | string;
   authorImageUrl: string;
   authorId: string;
 }
@@ -108,20 +109,22 @@ export interface AudioContextType {
 }
 
 export interface PodcastCardProps {
-  imgUrl: string;
+  imagUrl: string;
   title: string;
   description: string;
   podcastId: Id<'podcasts'> | any;
 }
 
 export interface CarouselProps {
-  fansLikeDetail: TopPodcastersProps[];
+  fansLikeDetails: TopPodcastersProps[];
 }
 
 export interface ProfileCardProps {
   podcastData: ProfilePodcastProps;
   imageUrl: string;
   userFirstName: string;
+  userId: Id<'podcasts'> | any;
+  following:any
 }
 
 export type UseDotButtonType = {

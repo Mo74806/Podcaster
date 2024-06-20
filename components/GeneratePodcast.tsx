@@ -249,8 +249,8 @@ const useGeneratePodcast = ({ setAudio, voiceType, voicePrompt, setAudioStorageI
           },
           voice: {
             languageCode: 'en-US',
-            name: 'en-US-Wavenet-D', // Ensure a specific voice is selected
-            ssmlGender: 'NEUTRAL',
+            name: 'en-US-Wavenet-C', // Ensure a specific voice is selected
+            ssmlGender: 'FEMALE',
           },
           audioConfig: {
             audioEncoding: 'MP3',
@@ -293,6 +293,7 @@ const useGeneratePodcast = ({ setAudio, voiceType, voicePrompt, setAudioStorageI
 
       const uploaded = await startUpload([file]);
       const storageId = (uploaded[0].response as any).storageId;
+      setAudioStorageId(storageId);
 
       const imageUrl = await getAudioUrl({ storageId });
       console.log('Uploaded Audio URL:', imageUrl);
@@ -302,7 +303,7 @@ const useGeneratePodcast = ({ setAudio, voiceType, voicePrompt, setAudioStorageI
       // const audioUrl = URL.createObjectURL(audioBlob);
 
       // Set the audio URL for immediate playback
-      setAudio(audioUrl);
+      setAudio(imageUrl!);
       // setAudio(imageUrl!);
     } catch (error) {
       console.error('Error converting text to speech:', error);
