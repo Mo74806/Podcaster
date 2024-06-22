@@ -249,59 +249,7 @@ export const updatePodcastViews = mutation({
 //   },
 // });
 
-// export const getFollowingPodcasts = query({
-//   args: {
-//     clerkId: v.string(),
-//     page: v.number(),
-//     limit: v.number(),
-//   },
-//   async handler(ctx, args) {
-//     const { clerkId, page, limit } = args;
-
-//     // Fetch the user by clerkId
-
-//     const user = await ctx.db
-//       .query('users')
-//       .filter((q) => q.eq(q.field('clerkId'), clerkId))
-//       .unique();
-
-//     // If user not found, throw an error
-//     console.log(user);
-//     if (!user) {
-//       throw new ConvexError('User not found');
-//     }
-
-//     // If the user has no following list, return an empty array
-//     if (!user.following || user.following.length === 0) {
-//       return [];
-//     }
-
-//     // Fetch all podcasts from the following users
-//     let followingPodcasts: any[] = [];
-//     for (const followingUserId of user.following) {
-//       console.log(followingUserId);
-//       const podcasts = await ctx.db
-//         .query('podcasts')
-//         .filter((q) => q.eq(q.field('user'), followingUserId))
-//         .collect();
-//       followingPodcasts = followingPodcasts.concat(podcasts);
-//     }
-//     console.log(followingPodcasts);
-//     // Sort the podcasts by creationTime in descending order
-//     followingPodcasts.sort((a, b) => b.creationTime - a.creationTime);
-
-//     // Calculate offset for pagination
-//     const offset = (page - 1) * limit;
-
-//     // Apply pagination
-//     const paginatedPodcasts = followingPodcasts.slice(offset, offset + limit);
-
-//     // Return the paginated podcasts
-//     return paginatedPodcasts;
-//     // return followingPodcasts;
-//   },
-// });
-
+// this mutation will get your following's podcasts.
 export const getFollowingPodcasts = query({
   args: {
     clerkId: v.string(),
@@ -322,13 +270,10 @@ export const getFollowingPodcasts = query({
       throw new ConvexError('User not found');
     }
 
-    // If the user has no following list, return an empty array
+    // If the user has no following list, return an empty array with totalPages = 0
     if (!user.following || user.following.length === 0) {
-      return [];
+      return { podcasts: [], totalPages: 0 };
     }
-
-    // Calculate skip count for pagination
-    const skip = (page - 1) * limit;
 
     // Array to collect results
     let followingPodcasts: any[] = [];
@@ -351,10 +296,16 @@ export const getFollowingPodcasts = query({
     // Sort the combined results by creation time (since we batched them)
     followingPodcasts.sort((a, b) => b._creationTime - a._creationTime);
 
+    // Calculate total pages
+    const totalPages = Math.ceil(followingPodcasts.length / limit);
+
+    // Calculate skip count for pagination
+    const skip = (page - 1) * limit;
+
     // Apply pagination on the combined sorted results
     const paginatedPodcasts = followingPodcasts.slice(skip, skip + limit);
 
-    // Return the paginated podcasts
-    return paginatedPodcasts;
+    // Return the paginated podcasts and total pages
+    return { podcasts: paginatedPodcasts, totalPages };
   },
 });

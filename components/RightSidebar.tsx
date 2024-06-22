@@ -9,15 +9,23 @@ import Carousel from './Carousel';
 import { useQuery } from 'convex/react';
 import { useRouter } from 'next/navigation';
 import LoaderSpinner from './LoaderSpinner';
+import type { PodcastCardProps } from '@/types';
+import { useAudio } from '@/Providers/AudioProvider';
+import { cn } from '@/lib/utils';
 
 const RightSidebar = () => {
   const { user } = useUser();
   const router = useRouter();
-
+  const { audio } = useAudio();
   const topPodcasters = useQuery(api.users.getTopUserByPodcastCount);
   console.log(topPodcasters);
   return (
-    <section className="right_sidebar text-white-1">
+    <section
+      className={cn('right_sidebar text-white-1 overflow-auto h-[calc(100vh-5px)]', {
+        'h-[calc(100vh-110px)]': audio?.audioUrl,
+      })}
+      // className=""
+    >
       <SignedIn>
         <Link className="flex  gap-3 pb-12" href={`/profile/${user?.id}`}>
           <UserButton />

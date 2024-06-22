@@ -34,4 +34,6 @@ export default defineSchema({
     following: v.optional(v.array(v.id('users'))),
     follower: v.optional(v.array(v.id('users'))),
   }),
+  // .searchIndex('search_name1', { searchField: 'firstName' })
+  // .searchIndex('search_name2', { searchField: 'name' })
 });

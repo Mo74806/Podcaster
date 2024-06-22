@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="relative flex flex-col pt-16 lg:pt-0">
+    <div className="relative flex flex-col pt-16 md:pt-0">
       <Nav />
       <main className="relative flex bg-black-3">
         {/* left side bar */}

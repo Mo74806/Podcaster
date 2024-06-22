@@ -166,14 +166,19 @@ export const followuser = mutation({
     }
   },
 });
-
 export const getFollowing = query({
-  args: { clerkId: v.string() },
+  args: {
+    clerkId: v.string(),
+    page: v.optional(v.number()), // Page number, default to 1
+    limit: v.optional(v.number()), // Page size, default to 10
+  },
   async handler(ctx, args) {
+    const { clerkId, page = 1, limit = 10 } = args;
+
     // Fetch the user by clerkId
     const user = await ctx.db
       .query('users')
-      .filter((q) => q.eq(q.field('clerkId'), args.clerkId))
+      .filter((q) => q.eq(q.field('clerkId'), clerkId))
       .unique();
 
     // If user not found, throw an error
@@ -183,23 +188,58 @@ export const getFollowing = query({
 
     // If the user has no following list, return an empty array
     if (!user.following || user.following.length === 0) {
-      return [];
+      return { followingUsers: [], totalPages: 0 };
     }
-    const followingIds = user.following;
 
-    // Fetch the users that the current user is following
+    const followingIds = user.following;
+    const totalFollowing = followingIds.length;
+    const totalPages = Math.ceil(totalFollowing / limit);
+
+    // Calculate the offset for pagination
+    const offset = (page - 1) * limit;
+    const paginatedIds = followingIds.slice(offset, offset + limit);
+
+    // Fetch the users that the current user is following with pagination
     const followingUsers = [];
-    for (const id of user.following) {
+    for (const id of paginatedIds) {
       const followingUser = await ctx.db
         .query('users')
         .filter((q) => q.eq(q.field('_id'), id))
         .unique();
 
       if (followingUser) {
-        followingUsers.push(followingUser);
+        // Fetch the number of podcasts for this user
+        const podcastCount = await ctx.db
+          .query('podcasts')
+          .filter((q) => q.eq(q.field('user'), id))
+          .collect();
+
+        followingUsers.push({ ...followingUser, podcastCount: podcastCount?.length });
       }
     }
-    // Return the following users
-    return followingUsers;
+
+    // Return the following users and total pages
+    return { followingUsers, totalPages };
+  },
+});
+
+export const searchPodcasters = query({
+  args: {
+    search: v.string(),
+  },
+  async handler(ctx, args) {
+    // Perform the search query
+    const users = await ctx.db
+      .query('users')
+      .filter((q) =>
+        q.or(
+          q.eq(q.field('name'), args.search),
+          q.or(q.eq(q.field('email'), args.search), q.eq(q.field('firstName'), args.search), q.eq(q.field('lastName'), args.search)),
+        ),
+      )
+      .take(10);
+
+    // Get the total number of matched users for pagination
+    return users;
   },
 });

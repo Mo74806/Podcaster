@@ -109,7 +109,7 @@ export interface AudioContextType {
 }
 
 export interface PodcastCardProps {
-  imagUrl: string;
+  imgUrl: string;
   title: string;
   description: string;
   podcastId: Id<'podcasts'> | any;
@@ -124,7 +124,7 @@ export interface ProfileCardProps {
   imageUrl: string;
   userFirstName: string;
   userId: Id<'podcasts'> | any;
-  following:any
+  following: any;
 }
 
 export type UseDotButtonType = {
