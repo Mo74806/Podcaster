@@ -88,9 +88,9 @@ export interface PodcastDetailPlayerProps {
   author: string;
   isOwner: boolean;
   imageUrl: string;
-  podcastId: Id<'podcasts'> | string;
-  imageStorageId: Id<'_storage'> | string;
-  audioStorageId: Id<'_storage'> | string;
+  podcastId: Id<'podcasts'>;
+  imageStorageId: Id<'_storage'>;
+  audioStorageId: Id<'_storage'>;
   authorImageUrl: string;
   authorId: string;
 }

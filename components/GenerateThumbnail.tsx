@@ -80,7 +80,7 @@ const GenerateThumbnail = ({ setImage, setImageStorageId, image, imagePrompt, se
   return (
     <>
       <div className="generate_thumbnail">
-        <Button
+        {/* <Button
           type="button"
           variant="plain"
           onClick={() => setIsAiThumbnail(true)}
@@ -89,7 +89,7 @@ const GenerateThumbnail = ({ setImage, setImageStorageId, image, imagePrompt, se
           })}
         >
           Use AI to generate thumbnail
-        </Button>
+        </Button> */}
         <Button
           type="button"
           variant="plain"

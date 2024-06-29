@@ -229,25 +229,25 @@ export const updatePodcastViews = mutation({
   },
 });
 
-// // this mutation will delete the podcast.
-// export const deletePodcast = mutation({
-//   args: {
-//     podcastId: v.id('podcasts'),
-//     imageStorageId: v.id('_storage'),
-//     audioStorageId: v.id('_storage'),
-//   },
-//   handler: async (ctx, args) => {
-//     const podcast = await ctx.db.get(args.podcastId);
+// this mutation will delete the podcast.
+export const deletePodcast = mutation({
+  args: {
+    podcastId: v.id('podcasts'),
+    imageStorageId: v.id('_storage'),
+    audioStorageId: v.id('_storage'),
+  },
+  handler: async (ctx, args) => {
+    const podcast = await ctx.db.get(args.podcastId);
 
-//     if (!podcast) {
-//       throw new ConvexError('Podcast not found');
-//     }
+    if (!podcast) {
+      throw new ConvexError('Podcast not found');
+    }
 
-//     await ctx.storage.delete(args.imageStorageId);
-//     await ctx.storage.delete(args.audioStorageId);
-//     return await ctx.db.delete(args.podcastId);
-//   },
-// });
+    await ctx.storage.delete(args.imageStorageId);
+    await ctx.storage.delete(args.audioStorageId);
+    return await ctx.db.delete(args.podcastId);
+  },
+});
 
 // this mutation will get your following's podcasts.
 export const getFollowingPodcasts = query({

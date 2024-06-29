@@ -134,3 +134,13 @@ const FollowingPodcasts = ({ page: initialPage }: Params) => {
 };
 
 export default FollowingPodcasts;
+
+//delete podcast*   [confirmation]
+//create play list
+//number of followers &following  ++++
+//categories
+//convert pagination to endless scrolling
+//loading pages take so long ++++
+//show loading percentage when uploading podcast
+//set voice type default as male
+//
